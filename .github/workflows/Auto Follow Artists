@@ -1,14 +1,16 @@
 name: Auto Follow Artists
 
+# Gatilhos: action manual e agendada a cada 6 horas
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 */6 * * *"
 
 jobs:
   run:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
