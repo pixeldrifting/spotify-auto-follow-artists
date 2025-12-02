@@ -11,13 +11,13 @@ SPOTIFY_CLIENT_SECRET
 
 SPOTIFY_REFRESH_TOKEN
 
-2. Coloque no GitHub
+2. Adicione ao GitHub
 
 No repositório:
 
 Settings → Secrets and variables → Actions → New repository secret
 
-Adicione:
+Crie:
 
 SPOTIFY_CLIENT_ID
 
@@ -25,6 +25,16 @@ SPOTIFY_CLIENT_SECRET
 
 SPOTIFY_REFRESH_TOKEN
 
-3. Pronto!
+3. Execução manual
 
-O script roda automaticamente a cada 6 horas, seguindo novos artistas sempre que você curtir músicas novas.
+O script só roda quando você quiser, usando:
+
+Actions → Auto Follow Artists → Run workflow
+
+Sempre que rodar, ele:
+
+Gera um access token automaticamente usando o refresh token
+
+Lê suas músicas curtidas
+
+Segue todos os artistas novos
