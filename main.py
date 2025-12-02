@@ -1,21 +1,23 @@
 import requests
 import os
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
+CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+REFRESH_TOKEN = os.getenv("SPOTIFY_REFRESH_TOKEN")
 
 def get_access_token():
     url = "https://accounts.spotify.com/api/token"
+
     data = {
         "grant_type": "refresh_token",
         "refresh_token": REFRESH_TOKEN,
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
     }
 
-    response = requests.post(url, data=data)
+    auth = (CLIENT_ID, CLIENT_SECRET)
+
+    response = requests.post(url, data=data, auth=auth)
     response.raise_for_status()
+
     return response.json()["access_token"]
 
 
@@ -24,10 +26,11 @@ def get_liked_tracks(access_token):
     headers = {"Authorization": f"Bearer {access_token}"}
 
     artists = set()
+
     while url:
         resp = requests.get(url, headers=headers).json()
 
-        for item in resp["items"]:
+        for item in resp.get("items", []):
             for artist in item["track"]["artists"]:
                 artists.add(artist["id"])
 
@@ -39,6 +42,7 @@ def get_liked_tracks(access_token):
 def follow_artists(access_token, artist_ids):
     url = "https://api.spotify.com/v1/me/following?type=artist"
     headers = {"Authorization": f"Bearer {access_token}"}
+
     chunks = [artist_ids[i:i+50] for i in range(0, len(artist_ids), 50)]
 
     for chunk in chunks:
